@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { mockApi, Order } from "@/lib/api";
 import { 
@@ -47,10 +48,12 @@ const OrdersPage = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Управление заказами</h1>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Добавить заказ
-          </Button>
+          <Link to="/orders/create">
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Добавить заказ
+            </Button>
+          </Link>
         </div>
 
         <Card>
@@ -92,15 +95,17 @@ const OrdersPage = () => {
                         <TableCell>{order.customerName}</TableCell>
                         <TableCell>{formatCurrency(order.total)}</TableCell>
                         <TableCell>
-                          <span className={`px-2 py-1 text-xs rounded-full ${statusStyle.bg} ${statusStyle.text}`}>
+                          <span className={`px-2 py-1 text-xs rounded-full ${statusStyle.bg} ${statusStyle.text}`}> 
                             {statusStyle.label}
                           </span>
                         </TableCell>
                         <TableCell>{formatDate(order.createdAt)}</TableCell>
                         <TableCell className="text-right">
-                          <Button variant="ghost" size="icon">
-                            <Eye className="h-4 w-4" />
-                          </Button>
+                          <Link to={`/orders/edit/${order.id}`}> 
+                            <Button variant="ghost" size="icon">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </Link>
                         </TableCell>
                       </TableRow>
                     );

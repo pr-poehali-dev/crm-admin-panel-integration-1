@@ -1,5 +1,5 @@
-
-import { Bell, Settings, User } from "lucide-react";
+import { Bell, Settings, User, LogOut } from "lucide-react");
+import { useNavigate } from "react-router-dom");
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -10,8 +10,30 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
+  // Получаем данные текущего пользователя из localStorage
+  const userStr = localStorage.getItem('user');
+  const user = userStr ? JSON.parse(userStr) : null;
+  
+  const handleLogout = () => {
+    // Удаляем токен и данные пользователя
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    
+    toast({
+      title: "Выход из системы",
+      description: "Вы успешно вышли из системы",
+    });
+    
+    // Перенаправляем на страницу входа
+    navigate('/login');
+  };
+
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-14 items-center px-4 lg:px-6">
@@ -31,12 +53,17 @@ const Header = () => {
               >
                 <Avatar>
                   <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>АП</AvatarFallback>
+                  <AvatarFallback>{user?.name?.substring(0, 2).toUpperCase() || "АП"}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Мой аккаунт</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                {user?.name || "Мой аккаунт"}
+                {user?.role && (
+                  <p className="text-xs text-muted-foreground mt-1">{user.role}</p>
+                )}
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <User className="mr-2 h-4 w-4" />
@@ -47,7 +74,10 @@ const Header = () => {
                 <span>Настройки</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Выйти</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Выйти</span>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

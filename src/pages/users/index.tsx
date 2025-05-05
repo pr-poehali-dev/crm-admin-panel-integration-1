@@ -1,5 +1,5 @@
-
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { mockApi, User } from "@/lib/api";
 import { 
@@ -56,10 +56,12 @@ const UsersPage = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Управление пользователями</h1>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Добавить пользователя
-          </Button>
+          <Link to="/users/create">
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Добавить пользователя
+            </Button>
+          </Link>
         </div>
 
         <Card>
@@ -121,16 +123,18 @@ const UsersPage = () => {
                             : user.role === 'manager' 
                             ? 'bg-blue-100 text-blue-800' 
                             : 'bg-gray-100 text-gray-800'
-                        }`}>
+                        }`}> 
                           {user.role}
                         </span>
                       </TableCell>
                       <TableCell>{formatDate(user.createdAt)}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon">
-                            <Edit className="h-4 w-4" />
-                          </Button>
+                          <Link to={`/users/edit/${user.id}`}>  
+                            <Button variant="ghost" size="icon">
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </Link>
                           <Button 
                             variant="ghost" 
                             size="icon" 
