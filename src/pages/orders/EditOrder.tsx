@@ -1,13 +1,14 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react");
 import { useParams, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { Order, mockApi, api } from "@/lib/api";
+import { Order, OrderFormValues, mockApi, api } from "@/lib/api";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import OrderForm from "@/components/orders/OrderForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
+
+import type { OrderFormValues } from "@/components/orders/OrderForm";
 
 const EditOrder = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,9 +25,9 @@ const EditOrder = () => {
         // const orderData = await api.orders.getById(Number(id));
         
         // Имитация загрузки данных заказа
-        await new Promise(resolve => setTimeout(resolve, 1000));
+a        await new Promise(resolve => setTimeout(resolve, 1000));
         const orders = mockApi.orders.getLatest();
-        const orderData = orders.find(o => o.id === Number(id)) || null;
+        let orderData = orders.find(o => o.id === Number(id)) || null;
         
         if (!orderData) {
           toast({
@@ -37,6 +38,29 @@ const EditOrder = () => {
           navigate("/orders");
           return;
         }
+        
+        // Добавляем демо-данные для полей, которых нет в моках
+        orderData = {
+          ...orderData,
+          shippingAddress: "ул. Примерная, д. 123, кв. 45, г. Москва",
+          billingAddress: "ул. Примерная, д. 123, кв. 45, г. Москва",
+          notes: "Доставка в рабочее время с 10:00 до 18:00",
+          paymentMethod: "card",
+          orderItems: [
+            {
+              id: 1,
+              name: "Товар 1",
+              quantity: 2,
+              price: orderData.total * 0.4
+            },
+            {
+              id: 2,
+              name: "Товар 2",
+              quantity: 1,
+              price: orderData.total * 0.6
+            }
+          ]
+        };
         
         setOrder(orderData);
       } catch (error) {
@@ -49,18 +73,18 @@ const EditOrder = () => {
         setIsLoading(false);
       }
     };
-
+    
     fetchOrder();
   }, [id, navigate, toast]);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: OrderFormValues) => {
     setIsSaving(true);
     try {
       // В реальном приложении здесь будет вызов к API
       // await api.orders.update(Number(id), values);
       
       // Имитация обновления заказа
-      await new Promise(resolve => setTimeout(resolve, 1000));
+a      await new Promise(resolve => setTimeout(resolve, 1000));
       
       toast({
         title: "Успешно",
@@ -78,7 +102,7 @@ const EditOrder = () => {
       setIsSaving(false);
     }
   };
-
+  
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -93,7 +117,7 @@ const EditOrder = () => {
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Редактирование заказа
+              Редактирование заказа #{id}
             </h1>
           </div>
         </div>

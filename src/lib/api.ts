@@ -1,4 +1,3 @@
-
 import { toast } from "@/hooks/use-toast";
 
 // API базовый URL для всех запросов
@@ -12,6 +11,17 @@ export interface User {
   role: string;
   avatarUrl?: string;
   createdAt: string;
+  phone?: string;
+  notes?: string;
+  isActive?: boolean;
+  department?: string;
+}
+
+export interface OrderItem {
+  id?: number;
+  name: string;
+  quantity: number;
+  price: number;
 }
 
 export interface Order {
@@ -22,6 +32,11 @@ export interface Order {
   status: 'pending' | 'processing' | 'completed' | 'cancelled';
   items: number;
   createdAt: string;
+  orderItems?: OrderItem[];
+  shippingAddress?: string;
+  billingAddress?: string;
+  notes?: string;
+  paymentMethod?: 'cash' | 'card' | 'bank_transfer';
 }
 
 export interface DashboardStats {
